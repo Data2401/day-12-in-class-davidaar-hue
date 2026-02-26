@@ -354,13 +354,12 @@ display: none;
 
 
 <pre class="r"><code>library(tidyverse)</code></pre>
-<pre><code>## Warning: package &#39;purrr&#39; was built under R version 4.5.1</code></pre>
 <pre><code>## ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
-## ✔ dplyr     1.1.4     ✔ readr     2.1.5
-## ✔ forcats   1.0.0     ✔ stringr   1.5.1
-## ✔ ggplot2   3.5.2     ✔ tibble    3.3.0
-## ✔ lubridate 1.9.4     ✔ tidyr     1.3.1
-## ✔ purrr     1.1.0     
+## ✔ dplyr     1.1.4     ✔ readr     2.1.6
+## ✔ forcats   1.0.1     ✔ stringr   1.6.0
+## ✔ ggplot2   4.0.2     ✔ tibble    3.3.1
+## ✔ lubridate 1.9.4     ✔ tidyr     1.3.2
+## ✔ purrr     1.2.1     
 ## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
 ## ✖ dplyr::filter() masks stats::filter()
 ## ✖ dplyr::lag()    masks stats::lag()
@@ -377,14 +376,42 @@ library(tidyverse)
 
 my_flights &lt;- flights ## getting a copy of the data in the environment</code></pre>
 <ol style="list-style-type: decimal">
-<li><p>Use functions to inspect it: how many rows and columns does it
-have? What are the names of the columns? Hint: Use
-<code>??flights</code> to search for documentation on the data set (for
-what the columns contain)</p></li>
-<li><p>Use <code>dplyr</code> to give the dataframe two new columns:
+<li>Use functions to inspect it: how many rows and columns does it have?
+What are the names of the columns? Hint: Use <code>??flights</code> to
+search for documentation on the data set (for what the columns
+contain)</li>
+</ol>
+<pre class="r"><code>dim(my_flights)</code></pre>
+<pre><code>## [1] 336776     19</code></pre>
+<pre class="r"><code>glimpse(flights)</code></pre>
+<pre><code>## Rows: 336,776
+## Columns: 19
+## $ year           &lt;int&gt; 2013, 2013, 2013, 2013, 2013, 2013, 2013, 2013, 2013, 2…
+## $ month          &lt;int&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1…
+## $ day            &lt;int&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1…
+## $ dep_time       &lt;int&gt; 517, 533, 542, 544, 554, 554, 555, 557, 557, 558, 558, …
+## $ sched_dep_time &lt;int&gt; 515, 529, 540, 545, 600, 558, 600, 600, 600, 600, 600, …
+## $ dep_delay      &lt;dbl&gt; 2, 4, 2, -1, -6, -4, -5, -3, -3, -2, -2, -2, -2, -2, -1…
+## $ arr_time       &lt;int&gt; 830, 850, 923, 1004, 812, 740, 913, 709, 838, 753, 849,…
+## $ sched_arr_time &lt;int&gt; 819, 830, 850, 1022, 837, 728, 854, 723, 846, 745, 851,…
+## $ arr_delay      &lt;dbl&gt; 11, 20, 33, -18, -25, 12, 19, -14, -8, 8, -2, -3, 7, -1…
+## $ carrier        &lt;chr&gt; &quot;UA&quot;, &quot;UA&quot;, &quot;AA&quot;, &quot;B6&quot;, &quot;DL&quot;, &quot;UA&quot;, &quot;B6&quot;, &quot;EV&quot;, &quot;B6&quot;, &quot;…
+## $ flight         &lt;int&gt; 1545, 1714, 1141, 725, 461, 1696, 507, 5708, 79, 301, 4…
+## $ tailnum        &lt;chr&gt; &quot;N14228&quot;, &quot;N24211&quot;, &quot;N619AA&quot;, &quot;N804JB&quot;, &quot;N668DN&quot;, &quot;N394…
+## $ origin         &lt;chr&gt; &quot;EWR&quot;, &quot;LGA&quot;, &quot;JFK&quot;, &quot;JFK&quot;, &quot;LGA&quot;, &quot;EWR&quot;, &quot;EWR&quot;, &quot;LGA&quot;,…
+## $ dest           &lt;chr&gt; &quot;IAH&quot;, &quot;IAH&quot;, &quot;MIA&quot;, &quot;BQN&quot;, &quot;ATL&quot;, &quot;ORD&quot;, &quot;FLL&quot;, &quot;IAD&quot;,…
+## $ air_time       &lt;dbl&gt; 227, 227, 160, 183, 116, 150, 158, 53, 140, 138, 149, 1…
+## $ distance       &lt;dbl&gt; 1400, 1416, 1089, 1576, 762, 719, 1065, 229, 944, 733, …
+## $ hour           &lt;dbl&gt; 5, 5, 5, 5, 6, 5, 6, 6, 6, 6, 6, 6, 6, 6, 6, 5, 6, 6, 6…
+## $ minute         &lt;dbl&gt; 15, 29, 40, 45, 0, 58, 0, 0, 0, 0, 0, 0, 0, 0, 0, 59, 0…
+## $ time_hour      &lt;dttm&gt; 2013-01-01 05:00:00, 2013-01-01 05:00:00, 2013-01-01 0…</code></pre>
+<pre class="r"><code>??flights</code></pre>
+<pre><code>## starting httpd help server ... done</code></pre>
+<ol start="2" style="list-style-type: decimal">
+<li>Use <code>dplyr</code> to give the dataframe two new columns:
 <code>gain = dep_delay - arr_delay</code> that is the amount of time
 gained while flying and
-<code>speed = distance / air_time * 60</code>.</p></li>
+<code>speed = distance / air_time * 60</code>.</li>
 </ol>
 <p>New skill: Use <code>.before = 1</code> as an argument to
 <code>mutate</code> to add the new variables to the left hand side of
@@ -392,20 +419,135 @@ the dataset. The . indicates that <code>.before</code> is an argument to
 the function, not the name of a third new variable we are creating. You
 can use .before or .after to tell R where to put the new variable you’ve
 made.</p>
+<pre class="r"><code>flights &lt;- flights %&gt;%
+  mutate(
+    gain = dep_delay - arr_delay,
+    speed = distance / air_time * 60,
+    .before = 1
+  )
+flights</code></pre>
+<pre><code>## # A tibble: 336,776 × 21
+##     gain speed  year month   day dep_time sched_dep_time dep_delay arr_time
+##    &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;
+##  1    -9  370.  2013     1     1      517            515         2      830
+##  2   -16  374.  2013     1     1      533            529         4      850
+##  3   -31  408.  2013     1     1      542            540         2      923
+##  4    17  517.  2013     1     1      544            545        -1     1004
+##  5    19  394.  2013     1     1      554            600        -6      812
+##  6   -16  288.  2013     1     1      554            558        -4      740
+##  7   -24  404.  2013     1     1      555            600        -5      913
+##  8    11  259.  2013     1     1      557            600        -3      709
+##  9     5  405.  2013     1     1      557            600        -3      838
+## 10   -10  319.  2013     1     1      558            600        -2      753
+## # ℹ 336,766 more rows
+## # ℹ 12 more variables: sched_arr_time &lt;int&gt;, arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;,
+## #   flight &lt;int&gt;, tailnum &lt;chr&gt;, origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;,
+## #   distance &lt;dbl&gt;, hour &lt;dbl&gt;, minute &lt;dbl&gt;, time_hour &lt;dttm&gt;</code></pre>
 <ol start="3" style="list-style-type: decimal">
-<li><p>Use <code>dplyr</code> to sort your data frame in descending
-order by the column you just created. Remember to save this as a
-variable (or in the same one!)</p></li>
-<li><p>If you haven’t already, do the last 2 steps in a single statement
-using the pipe operator.</p></li>
-<li><p>On average, did flights gain or lose time? Note: use the
-<code>na.rm = TRUE</code> argument to remove NA values from your
-calc</p></li>
-<li><p>Create a data.frame of flights with a destination of Hobby
-Airport (Airport code ‘HOU’), only including the origin, destination,
-and the “made_up_time” column you just created</p></li>
-<li><p>On average, did flights to SeaTac gain or lose time?</p></li>
+<li>Use <code>dplyr</code> to sort your data frame in descending order
+by the column you just created. Remember to save this as a variable (or
+in the same one!)</li>
 </ol>
+<pre class="r"><code>flights &lt;- flights %&gt;%
+arrange (desc(gain))
+flights</code></pre>
+<pre><code>## # A tibble: 336,776 × 21
+##     gain speed  year month   day dep_time sched_dep_time dep_delay arr_time
+##    &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;
+##  1   109  390.  2013     6    13     1907           1512       235     2134
+##  2    87  512.  2013     2    26     1000            900        60     1513
+##  3    80  499.  2013     2    23     1226            900       206     1746
+##  4    79  496.  2013     5    13     1917           1900        17     2149
+##  5    76  508.  2013     2    27      924            900        24     1448
+##  6    74  533.  2013     7    14     1917           1829        48     2109
+##  7    74  522.  2013     7    17     2004           1930        34     2224
+##  8    73  475   2013    12    27     1719           1648        31     1956
+##  9    73  491.  2013     5     2     1947           1949        -2     2209
+## 10    72  477.  2013    11    13     2024           2015         9     2251
+## # ℹ 336,766 more rows
+## # ℹ 12 more variables: sched_arr_time &lt;int&gt;, arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;,
+## #   flight &lt;int&gt;, tailnum &lt;chr&gt;, origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;,
+## #   distance &lt;dbl&gt;, hour &lt;dbl&gt;, minute &lt;dbl&gt;, time_hour &lt;dttm&gt;</code></pre>
+<ol start="4" style="list-style-type: decimal">
+<li>If you haven’t already, do the last 2 steps in a single statement
+using the pipe operator.</li>
+</ol>
+<pre class="r"><code>flights &lt;- flights %&gt;%
+  mutate(gain = dep_delay - arr_delay, speed = distance / air_time * 60,.before = 1)%&gt;%
+  arrange(-gain)
+flights</code></pre>
+<pre><code>## # A tibble: 336,776 × 21
+##     gain speed  year month   day dep_time sched_dep_time dep_delay arr_time
+##    &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;
+##  1   109  390.  2013     6    13     1907           1512       235     2134
+##  2    87  512.  2013     2    26     1000            900        60     1513
+##  3    80  499.  2013     2    23     1226            900       206     1746
+##  4    79  496.  2013     5    13     1917           1900        17     2149
+##  5    76  508.  2013     2    27      924            900        24     1448
+##  6    74  533.  2013     7    14     1917           1829        48     2109
+##  7    74  522.  2013     7    17     2004           1930        34     2224
+##  8    73  475   2013    12    27     1719           1648        31     1956
+##  9    73  491.  2013     5     2     1947           1949        -2     2209
+## 10    72  477.  2013    11    13     2024           2015         9     2251
+## # ℹ 336,766 more rows
+## # ℹ 12 more variables: sched_arr_time &lt;int&gt;, arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;,
+## #   flight &lt;int&gt;, tailnum &lt;chr&gt;, origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;,
+## #   distance &lt;dbl&gt;, hour &lt;dbl&gt;, minute &lt;dbl&gt;, time_hour &lt;dttm&gt;</code></pre>
+<ol start="5" style="list-style-type: decimal">
+<li>On average, did flights gain or lose time? Note: use the
+<code>na.rm = TRUE</code> argument to remove NA values from your
+calc</li>
+</ol>
+<pre class="r"><code>mean(flights$gain, na.rm =T)</code></pre>
+<pre><code>## [1] 5.659779</code></pre>
+<pre class="r"><code>mean(flights$speed, na.rm =T)</code></pre>
+<pre><code>## [1] 394.2737</code></pre>
+<pre class="r"><code>mean(flights$arr_delay, na.rm =T)</code></pre>
+<pre><code>## [1] 6.895377</code></pre>
+<ol start="6" style="list-style-type: decimal">
+<li>Create a data.frame of flights with a destination of Hobby Airport
+(Airport code ‘HOU’), only including the origin, destination, and the
+“made_up_time” column you just created</li>
+</ol>
+<pre class="r"><code>houston_flights &lt;- flights %&gt;% select(origin, dest, gain) %&gt;% filter(dest ==&quot;HOU&quot;)
+houston_flights &lt;- flights %&gt;% select(origin, dest, gain) %&gt;% filter(dest %in% c(&quot;HOU&quot;,&quot;IHA&quot;))
+houston_flights</code></pre>
+<pre><code>## # A tibble: 2,115 × 3
+##    origin dest   gain
+##    &lt;chr&gt;  &lt;chr&gt; &lt;dbl&gt;
+##  1 LGA    HOU      54
+##  2 EWR    HOU      53
+##  3 EWR    HOU      52
+##  4 EWR    HOU      51
+##  5 LGA    HOU      50
+##  6 EWR    HOU      49
+##  7 EWR    HOU      49
+##  8 EWR    HOU      49
+##  9 LGA    HOU      49
+## 10 LGA    HOU      49
+## # ℹ 2,105 more rows</code></pre>
+<ol start="7" style="list-style-type: decimal">
+<li>On average, did flights to SeaTac gain or lose time?</li>
+</ol>
+<pre class="r"><code>flights %&gt;%
+  filter(origin == &quot;JFK&quot;, dest == &quot;HOU&quot;)</code></pre>
+<pre><code>## # A tibble: 714 × 21
+##     gain speed  year month   day dep_time sched_dep_time dep_delay arr_time
+##    &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;
+##  1    42  453.  2013     3     6     1249           1215        34     1508
+##  2    41  461.  2013     4     5     2121           2045        36     2348
+##  3    39  435.  2013    11     4      909            815        54     1138
+##  4    36  444.  2013    11    13      814            815        -1     1046
+##  5    36  451.  2013     3    15     1227           1215        12     1452
+##  6    36  435.  2013     4    23     2048           2045         3     2320
+##  7    36  504   2013     9    28     1344           1345        -1     1556
+##  8    34  456.  2013     3     3     1218           1215         3     1445
+##  9    34  439.  2013     4     9     2100           2045        15     2334
+## 10    34  456.  2013     6    15     1444           1450        -6     1706
+## # ℹ 704 more rows
+## # ℹ 12 more variables: sched_arr_time &lt;int&gt;, arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;,
+## #   flight &lt;int&gt;, tailnum &lt;chr&gt;, origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;,
+## #   distance &lt;dbl&gt;, hour &lt;dbl&gt;, minute &lt;dbl&gt;, time_hour &lt;dttm&gt;</code></pre>
 </div>
 <div id="exercise" class="section level2">
 <h2>Exercise:</h2>
@@ -413,12 +555,65 @@ and the “made_up_time” column you just created</p></li>
 SEA. What was the average, min, and max air time of those flights? Use
 pipes to answer this question in one statement (without showing any
 other data)!</p>
+<pre class="r"><code>flights %&gt;%
+  filter(origin == &quot;JFK&quot;, dest == &quot;SEA&quot;) %&gt;%
+  summarise(
+    avg_air_time = mean(air_time, na.rm = TRUE),
+    min_air_time = min(air_time, na.rm = TRUE),
+    max_air_time = max(air_time, na.rm = TRUE)
+  )</code></pre>
+<pre><code>## # A tibble: 1 × 3
+##   avg_air_time min_air_time max_air_time
+##          &lt;dbl&gt;        &lt;dbl&gt;        &lt;dbl&gt;
+## 1         329.          275          389</code></pre>
 <p>Consider flights coming into Houston (HOU and IAH). What is the mean
 arrival delay by departure airport?</p>
+<pre class="r"><code>flights %&gt;%
+  filter(dest %in% c(&quot;HOU&quot;, &quot;IAH&quot;)) %&gt;%
+  group_by(origin) %&gt;%
+  summarise(mean_arr_delay = mean(arr_delay, na.rm = TRUE)) %&gt;%
+  arrange(desc(mean_arr_delay))</code></pre>
+<pre><code>## # A tibble: 3 × 2
+##   origin mean_arr_delay
+##   &lt;chr&gt;           &lt;dbl&gt;
+## 1 JFK             10.3 
+## 2 EWR              6.23
+## 3 LGA              1.37</code></pre>
 <p>Find the flights that are most delayed upon departure from each
 origin.</p>
+<pre class="r"><code>flights %&gt;%
+  group_by(origin) %&gt;%
+  filter(dep_delay == max(dep_delay, na.rm = TRUE)) %&gt;%
+  select(origin, year, month, day, flight, dest, dep_delay) %&gt;%
+  arrange(origin, desc(dep_delay))</code></pre>
+<pre><code>## # A tibble: 3 × 7
+## # Groups:   origin [3]
+##   origin  year month   day flight dest  dep_delay
+##   &lt;chr&gt;  &lt;int&gt; &lt;int&gt; &lt;int&gt;  &lt;int&gt; &lt;chr&gt;     &lt;dbl&gt;
+## 1 EWR     2013     1    10   3695 ORD        1126
+## 2 JFK     2013     1     9     51 HNL        1301
+## 3 LGA     2013     3    17   2119 MSP         911</code></pre>
 <p>Getting ready for next class: look at all the different values for
 the airport.</p>
+<pre class="r"><code>flights %&gt;%
+  summarise(airports = sort(unique(c(origin, dest)))) %&gt;%
+  pull(airports)</code></pre>
+<pre><code>## Warning: Returning more (or less) than 1 row per `summarise()` group was deprecated in
+## dplyr 1.1.0.
+## ℹ Please use `reframe()` instead.
+## ℹ When switching from `summarise()` to `reframe()`, remember that `reframe()`
+##   always returns an ungrouped data frame and adjust accordingly.
+## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+## generated.</code></pre>
+<pre><code>##   [1] &quot;ABQ&quot; &quot;ACK&quot; &quot;ALB&quot; &quot;ANC&quot; &quot;ATL&quot; &quot;AUS&quot; &quot;AVL&quot; &quot;BDL&quot; &quot;BGR&quot; &quot;BHM&quot; &quot;BNA&quot; &quot;BOS&quot;
+##  [13] &quot;BQN&quot; &quot;BTV&quot; &quot;BUF&quot; &quot;BUR&quot; &quot;BWI&quot; &quot;BZN&quot; &quot;CAE&quot; &quot;CAK&quot; &quot;CHO&quot; &quot;CHS&quot; &quot;CLE&quot; &quot;CLT&quot;
+##  [25] &quot;CMH&quot; &quot;CRW&quot; &quot;CVG&quot; &quot;DAY&quot; &quot;DCA&quot; &quot;DEN&quot; &quot;DFW&quot; &quot;DSM&quot; &quot;DTW&quot; &quot;EGE&quot; &quot;EWR&quot; &quot;EYW&quot;
+##  [37] &quot;FLL&quot; &quot;GRR&quot; &quot;GSO&quot; &quot;GSP&quot; &quot;HDN&quot; &quot;HNL&quot; &quot;HOU&quot; &quot;IAD&quot; &quot;IAH&quot; &quot;ILM&quot; &quot;IND&quot; &quot;JAC&quot;
+##  [49] &quot;JAX&quot; &quot;JFK&quot; &quot;LAS&quot; &quot;LAX&quot; &quot;LEX&quot; &quot;LGA&quot; &quot;LGB&quot; &quot;MCI&quot; &quot;MCO&quot; &quot;MDW&quot; &quot;MEM&quot; &quot;MHT&quot;
+##  [61] &quot;MIA&quot; &quot;MKE&quot; &quot;MSN&quot; &quot;MSP&quot; &quot;MSY&quot; &quot;MTJ&quot; &quot;MVY&quot; &quot;MYR&quot; &quot;OAK&quot; &quot;OKC&quot; &quot;OMA&quot; &quot;ORD&quot;
+##  [73] &quot;ORF&quot; &quot;PBI&quot; &quot;PDX&quot; &quot;PHL&quot; &quot;PHX&quot; &quot;PIT&quot; &quot;PSE&quot; &quot;PSP&quot; &quot;PVD&quot; &quot;PWM&quot; &quot;RDU&quot; &quot;RIC&quot;
+##  [85] &quot;ROC&quot; &quot;RSW&quot; &quot;SAN&quot; &quot;SAT&quot; &quot;SAV&quot; &quot;SBN&quot; &quot;SDF&quot; &quot;SEA&quot; &quot;SFO&quot; &quot;SJC&quot; &quot;SJU&quot; &quot;SLC&quot;
+##  [97] &quot;SMF&quot; &quot;SNA&quot; &quot;SRQ&quot; &quot;STL&quot; &quot;STT&quot; &quot;SYR&quot; &quot;TPA&quot; &quot;TUL&quot; &quot;TVC&quot; &quot;TYS&quot; &quot;XNA&quot;</code></pre>
 <p>Hmm… I don’t know about you, but it sure does seem like there are
 some values here I don’t recognize!</p>
 </div>
@@ -447,12 +642,98 @@ easier to use built-in data!).</p>
 <p>We’re going to use this to practice some data wrangling with
 <code>dplyr</code>.</p>
 <p>How many characters are from each planet?</p>
+<pre class="r"><code>starwars%&gt;% group_by(homeworld)%&gt;% summarise(n_charaters = n())</code></pre>
+<pre><code>## # A tibble: 49 × 2
+##    homeworld      n_charaters
+##    &lt;chr&gt;                &lt;int&gt;
+##  1 Alderaan                 3
+##  2 Aleen Minor              1
+##  3 Bespin                   1
+##  4 Bestine IV               1
+##  5 Cato Neimoidia           1
+##  6 Cerea                    1
+##  7 Champala                 1
+##  8 Chandrila                1
+##  9 Concord Dawn             1
+## 10 Corellia                 2
+## # ℹ 39 more rows</code></pre>
+<pre class="r"><code>starwars %&gt;% count(homeworld)</code></pre>
+<pre><code>## # A tibble: 49 × 2
+##    homeworld          n
+##    &lt;chr&gt;          &lt;int&gt;
+##  1 Alderaan           3
+##  2 Aleen Minor        1
+##  3 Bespin             1
+##  4 Bestine IV         1
+##  5 Cato Neimoidia     1
+##  6 Cerea              1
+##  7 Champala           1
+##  8 Chandrila          1
+##  9 Concord Dawn       1
+## 10 Corellia           2
+## # ℹ 39 more rows</code></pre>
 <p>If you wanted to arrange this in descending order, what would you add
 to the pipe?</p>
+<pre class="r"><code>starwars%&gt;%drop_na()</code></pre>
+<pre><code>## # A tibble: 29 × 14
+##    name     height  mass hair_color skin_color eye_color birth_year sex   gender
+##    &lt;chr&gt;     &lt;int&gt; &lt;dbl&gt; &lt;chr&gt;      &lt;chr&gt;      &lt;chr&gt;          &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt; 
+##  1 Luke Sk…    172    77 blond      fair       blue            19   male  mascu…
+##  2 Darth V…    202   136 none       white      yellow          41.9 male  mascu…
+##  3 Leia Or…    150    49 brown      light      brown           19   fema… femin…
+##  4 Owen La…    178   120 brown, gr… light      blue            52   male  mascu…
+##  5 Beru Wh…    165    75 brown      light      blue            47   fema… femin…
+##  6 Biggs D…    183    84 black      light      brown           24   male  mascu…
+##  7 Obi-Wan…    182    77 auburn, w… fair       blue-gray       57   male  mascu…
+##  8 Anakin …    188    84 blond      fair       blue            41.9 male  mascu…
+##  9 Chewbac…    228   112 brown      unknown    blue           200   male  mascu…
+## 10 Han Solo    180    80 brown      fair       brown           29   male  mascu…
+## # ℹ 19 more rows
+## # ℹ 5 more variables: homeworld &lt;chr&gt;, species &lt;chr&gt;, films &lt;list&gt;,
+## #   vehicles &lt;list&gt;, starships &lt;list&gt;</code></pre>
 <p>Find the average height for each eye color. You might find some of
 the answers to be strange, but keep going!</p>
+<pre class="r"><code>starwars %&gt;%
+  group_by(eye_color) %&gt;%
+  summarise(avg_height = mean(height, na.rm = TRUE)) %&gt;%
+  arrange(desc(avg_height))</code></pre>
+<pre><code>## # A tibble: 15 × 2
+##    eye_color     avg_height
+##    &lt;chr&gt;              &lt;dbl&gt;
+##  1 green, yellow       216 
+##  2 gold                191 
+##  3 black               185 
+##  4 blue                182.
+##  5 blue-gray           182 
+##  6 orange              180.
+##  7 pink                180 
+##  8 white               178 
+##  9 yellow              178.
+## 10 hazel               174 
+## 11 brown               167.
+## 12 red                 155.
+## 13 unknown             136 
+## 14 red, blue            96 
+## 15 dark                NaN</code></pre>
 <p>So…. What’s with the NAs? Filter down to just brown eyes find out
 what’s going on.</p>
+<pre class="r"><code>starwars %&gt;%
+  filter(eye_color == &quot;brown&quot;) %&gt;%
+  select(name, height, sex, gender, homeworld)</code></pre>
+<pre><code>## # A tibble: 21 × 5
+##    name                  height sex    gender    homeworld
+##    &lt;chr&gt;                  &lt;int&gt; &lt;chr&gt;  &lt;chr&gt;     &lt;chr&gt;    
+##  1 Leia Organa              150 female feminine  Alderaan 
+##  2 Biggs Darklighter        183 male   masculine Tatooine 
+##  3 Han Solo                 180 male   masculine Corellia 
+##  4 Yoda                      66 male   masculine &lt;NA&gt;     
+##  5 Boba Fett                183 male   masculine Kamino   
+##  6 Lando Calrissian         177 male   masculine Socorro  
+##  7 Arvel Crynyd              NA male   masculine &lt;NA&gt;     
+##  8 Wicket Systri Warrick     88 male   masculine Endor    
+##  9 Padmé Amidala            185 female feminine  Naboo    
+## 10 Quarsh Panaka            183 male   masculine Naboo    
+## # ℹ 11 more rows</code></pre>
 <p>Okay, so we have missing data here. Try summarising with
 <code>na.omit(height)</code> instead of just <code>height</code> or
 adding <code>na.rm = T</code> to the mean function inside summarize.</p>
@@ -460,6 +741,29 @@ adding <code>na.rm = T</code> to the mean function inside summarize.</p>
 many genders are there? Answer these questions and spend some time
 asking and answering some of your own. (Or, move to the homework and
 start working on the questions I ask there!)</p>
+<pre class="r"><code>starwars %&gt;%
+  filter(gender == &quot;male&quot;) %&gt;%
+  arrange(desc(height)) %&gt;%
+  select(name, height, homeworld) %&gt;%
+  slice(1)</code></pre>
+<pre><code>## # A tibble: 0 × 3
+## # ℹ 3 variables: name &lt;chr&gt;, height &lt;int&gt;, homeworld &lt;chr&gt;</code></pre>
+<pre class="r"><code>starwars %&gt;%
+  filter(gender == &quot;female&quot;, eye_color == &quot;blue&quot;) %&gt;%
+  summarise(n = n())</code></pre>
+<pre><code>## # A tibble: 1 × 1
+##       n
+##   &lt;int&gt;
+## 1     0</code></pre>
+<pre class="r"><code>starwars %&gt;%
+  distinct(gender) %&gt;%
+  arrange(gender)</code></pre>
+<pre><code>## # A tibble: 3 × 1
+##   gender   
+##   &lt;chr&gt;    
+## 1 feminine 
+## 2 masculine
+## 3 &lt;NA&gt;</code></pre>
 </div>
 
 
